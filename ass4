@@ -1,0 +1,219 @@
+#include<iostream>
+#include<string>
+using namespace std;
+
+struct Node {
+    string name,d,l;
+    int salary,emid;
+    Node * right;
+    Node * left;
+};
+
+Node * getnode() {
+    Node * temp;
+    temp = new Node;
+    cout << "Enter Employee ID ::";
+    cin >> temp->emid;
+    cout << "Enter Employee Name ::";
+    cin >> temp->name;
+    cout << "Enter Employee Designation ::";
+    cin >> temp->d;
+    cout << "Enter Employee Level ::";
+    cin >> temp->l;
+    cout << "Enter Salary of Employee ::";
+    cin >> temp->salary;
+    temp->left = NULL;
+    temp->right = NULL;
+    return temp;
+}
+
+Node * create() {
+    Node * temp, * ptr, * root = NULL;
+    char dir;
+    int ch;
+    do {
+        temp = getnode();
+        if (root == NULL) {
+            root = temp;
+        }
+        else {
+            ptr = root;
+            while (ptr != NULL) {
+                if (temp->salary < ptr->salary) {
+                    if (ptr->left == NULL) {
+                        ptr->left = temp;
+                        break;
+                    }
+                    else
+                        ptr = ptr->left;
+                }
+                else {
+                    if (ptr->right == NULL) {
+                        ptr->right = temp;
+                        break;
+                    }
+                    else
+                        ptr = ptr->right;
+                }
+            }
+        }
+        cout << "\nDo you want to add more data(1/0)::";
+        cin >> ch;
+    } while (ch == 1);
+    return root;
+}
+
+Node * minValueNode(Node * node) {
+    Node * current = node;
+    while (current->left != NULL) {
+        current = current->left;
+    }
+    return current;
+}
+
+Node * deleteNode(Node * root, int salary) {
+    if (root == NULL) {
+        return root;
+    }
+    if (salary < root->salary) {
+        root->left = deleteNode(root->left, salary);
+    }
+    else if (salary > root->salary) {
+        root->right = deleteNode(root->right, salary);
+    }
+    else {
+        if (root->left == NULL) {
+            Node * temp = root->right;
+            delete root;
+            return temp;
+        }
+        else if (root->right == NULL) {
+            Node * temp = root->left;
+            delete root;
+            return temp;
+        }
+        Node * temp = minValueNode(root->right);
+        root->emid=temp->emid;
+        root->name = temp->name;
+        root->d = temp->d;
+        root->l=temp->l;
+        root->salary = temp->salary;
+        root->right = deleteNode(root->right, temp->salary);
+    }
+    return root;
+}
+
+void display_search(Node * emp) {
+    if (emp != NULL) {
+        cout << "Employee Details:: \n";
+        cout<<  "ID          ::" << emp->emid<<endl;
+        cout << "Name        ::" << emp->name << endl;
+        cout << "Designation ::" << emp->d << endl;
+        cout<<  "Level       ::" << emp->l<<endl;
+        cout << "Salary      ::" << emp->salary << endl;
+
+    }
+    else {
+        cout << "Employee not found\n";
+    }
+}
+
+Node * searchNode(Node * root, int salary) {
+    if (root == NULL || root->salary == salary) {
+        return root;
+    }
+    if (salary < root->salary) {
+        return searchNode(root->left, salary);
+    }
+    return searchNode(root->right, salary);
+}
+
+void dis_postorder(Node * h) {
+    if (h != NULL) {
+        dis_postorder(h->left);
+        dis_postorder(h->right);
+        cout << "\t" <<"Employee ID :"<<h->emid<<"\t||\tEmployee Name :"<< h->name << "\t||\tEmployee Designation :" << h->d << "\t||\tEmployee Level :" <<h->l<<"\t||\tEmployee Salary :" << h->salary << "\n";
+        cout<<"----------------------------------------------------------------------------------------------------------------------------------------------------------\n";
+    }
+}
+
+void dis_preorder(Node * h) {
+    if (h != NULL) {
+        cout << "\t" <<"Employee ID :"<<h->emid<<"\t||\tEmployee Name :"<< h->name << "\t||\tEmployee Designation :" << h->d << "\t||\tEmployee Level :" <<h->l<<"\t||\tEmployee Salary :" << h->salary << "\n";
+        cout<<"----------------------------------------------------------------------------------------------------------------------------------------------------------\n";
+        dis_preorder(h->left);
+        dis_preorder(h->right);
+    }
+}
+
+void dis_inorder(Node * h) {
+    if (h != NULL) {
+        dis_inorder(h->left);
+               cout << "\t" <<"Employee ID :"<<h->emid<<"\t||\tEmployee Name :"<< h->name << "\t||\tEmployee Designation :" << h->d << "\t||\tEmployee Level :" <<h->l<<"\t||\tEmployee Salary :" << h->salary << "\n";
+        cout<<"----------------------------------------------------------------------------------------------------------------------------------------------------------\n";
+        dis_inorder(h->right);
+    }
+}
+
+void updateNode(Node * root, int salary) {
+    Node * emp = searchNode(root, salary);
+    if (emp != NULL) {
+    cout << "Enter new Employee ID ::";
+    cin >> emp->emid;
+    cout << "Enter new name:: ";
+    cin >> emp->name;
+    cout << "Enter new Employee Designation ::";
+    cin >> emp->d;
+    cout << "Enter new Employee Level ::";
+    cin >> emp->l;
+    cout << "Enter new salary:: ";
+    cin >> emp->salary;
+    cout << "Employee details updated successfully\n";
+    }
+    else {
+        cout << "Employee not found\n";
+    }
+}
+
+int main() {
+    Node * n;
+    int ch, c, salary;
+    do {
+        cout << "\nMENU\n1.CREATE\n2.DELETE\n3.SEARCH\n4.UPDATE\n5.DISPLAY ";
+        cout << "\nEnter Your Choice ::";
+        cin >> ch;
+        switch (ch) {
+        case 1:
+            n = create();
+            break;
+        case 2:
+            cout << "Enter salary of employee to delete: ";
+            cin >> salary;
+            n = deleteNode(n, salary);
+            break;
+        case 3:
+            cout << "Enter salary of employee to search: ";
+            cin >> salary;
+            display_search(searchNode(n, salary));
+            break;
+        case 4:
+            cout << "Enter salary of employee to update: ";
+            cin >> salary;
+            updateNode(n, salary);
+            break;
+        case 5:
+            cout << "Post order display ::\n";
+            dis_postorder(n);
+            cout << "\nPre order display ::\n";
+            dis_preorder(n);
+            cout << "\nIN order display::\n";
+            dis_inorder(n);
+            break;
+        default:
+            cout << "Wrong Choice";
+        }
+        cout << "\nContinue ::";
+        cin >> c;
+    } while (c == 1);
+    return 0;
+}
