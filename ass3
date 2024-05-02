@@ -1,0 +1,54 @@
+ #include<iostream>
+ #include<string>
+ using namespace std;
+ binarytree *createnode()
+ {
+    binarytree *temp;
+    temp=newbinarytree;
+    temp->lchild==NULL;
+    temp->rchild==NULL;
+    cout<<"enter the data";
+    cin>>temp->data;
+    return temp;
+ }
+ struct binarytree *Initialize()
+ {
+    root=NUll;
+ }
+ struct binarytree *makeempty(struct binarytree *root)
+ {
+    if(root!=NUll)
+    {
+        makeempty(root->lchild)
+        makeempty(root->rchild)
+        delete root;
+    }
+    return NULL;
+ }
+
+struct binarytree *insert()
+{
+    Binarytree *temp;
+    set *temp=t;
+    if(ptr->left==NULL)
+    {
+        ptr->left=tempnode;
+        break;
+    }
+
+    else
+    {
+     ptr=ptr->left;
+    }
+
+    if(ptr->right==NULL)
+    {
+        ptr->right=tempnode;
+        break;
+    }
+
+    else
+    {
+        ptr=ptr->right;
+    }
+} 
